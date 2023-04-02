@@ -5,7 +5,7 @@ function Demo() {
   const[text , setText] = useState('')
   return (
     <div>
-      <h1>This is my counter value {count}</h1>
+      <h1>This is my counter value {count} !</h1>
 
       <button onClick={() => setCount(count + 1)}>+</button>
       <button onClick={() => setCount(count - 1)}>-</button>
