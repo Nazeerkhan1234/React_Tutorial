@@ -23,7 +23,7 @@ const Feed = () => {
     <>
    
     <div style={{display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
-           <h1>hello brother</h1>
+
             <UploadFile user={userData}/>
             <Posts userData={userData}/>
         </div>
