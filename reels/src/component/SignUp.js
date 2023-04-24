@@ -7,11 +7,17 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
-
+import { database, storage } from "../firebase";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
 import { AuthContext } from "../Context/AuthContext";
 import { createUseStyles } from "react-jss";
 import instaLogo from "../Assets/Instagram.JPG";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./signup.css";
 export default function SignUp() {
   const useStyles = createUseStyles({
@@ -41,53 +47,54 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // let handleClick = async () => {
-  //   console.log(email);
-  //   console.log(password);
-  //   console.log(name);
-  //   console.log(file);
+  let handleClick = async () => {
+    // console.log(email);
+    // console.log(password);
+    // console.log(name);
+    // console.log(file);
 
-  //   try {
-  //     setLoading(true);
-  //     const userInfo = await signup(email, password);
-  //     console.log(userInfo.user.uid);
-  //     let uid = userInfo.user.uid;
+    try {
+      setLoading(true);
+      setError("");
+      const userInfo = await signup(email, password);
+      console.log(userInfo.user.uid);
+      let uid = userInfo.user.uid;
 
-  //     const storageRef = ref(storage, `${userInfo.user.uid}/Profile`);
-  //     const uploadTask = uploadBytesResumable(storageRef, file);
+      const storageRef = ref(storage, `${userInfo.user.uid}/Profile`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-  //     uploadTask.on(
-  //       "state_changed",
-  //       (snapshot) => {
-  //         const progress =
-  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //         console.log("Upload is " + progress + "% done");
-  //       },
-        // (error) => {
-        //   // A full list of error codes is available at
-        //   // https://firebase.google.com/docs/storage/web/handle-errors
-        //   console.log(error);
-        // },
-  //       () => {
-  //         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-  //           database.users.doc(uid).set({
-  //             email: email,
-  //             userId: uid,
-  //             fullname: name,
-  //             profileUrl: downloadURL,
-  //             createdAt: database.getTimestamp(),
-  //           });
-  //         });
-  //       }
-  //     );
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            database.users.doc(uid).set({
+              email: email,
+              userId: uid,
+              fullname: name,
+              profileUrl: downloadURL,
+              createdAt: database.getTimestamp(),
+            });
+          });
+        }
+      );
 
-  //     navigate("/feed");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+      navigate("/feed");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="signupWrapper">
       <div className="signupCard">
@@ -165,22 +172,24 @@ export default function SignUp() {
             <Button
               variant="contained"
               fullWidth={true}
-              // disable={loading}
-              // onClick={handleClick}
+              disable={loading}
+              onClick={handleClick}
             >
               Sign Up
             </Button>
           </CardActions>
         </Card>
 
-        { <Card sx={{ maxWidth: 345 }} className={classes.card2}>
-          <Typography> 
-             Have an Account?
-            <Link to="/login" style={{ textDecoration: "none" }}>
-              Log in
-            </Link>
-          </Typography>
-        </Card> }
+        {
+          <Card sx={{ maxWidth: 345 }} className={classes.card2}>
+            <Typography>
+              Have an Account?
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                Log in
+              </Link>
+            </Typography>
+          </Card>
+        }
       </div>
     </div>
   );
