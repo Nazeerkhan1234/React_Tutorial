@@ -7,6 +7,8 @@ import { UseContext } from './component/UseContext';
 import UseState from './component/UseState';
 import UseMemo from './component/UseMemo';
 import UseCallback from './component/UseCallback';
+import Form from './component/Form';
+import Axios1 from './component/Axios1';
 function App() {
   return (
     <div className="App">
@@ -17,7 +19,9 @@ function App() {
     {/* <Uref/> */}
     {/* <UseContext/> */}
     {/* <UseMemo/> */}
-    <UseCallback/>
+    {/* <UseCallback/> */}
+    {/* <Form/> */}
+    <Axios1/>
     </div>
   );
 }

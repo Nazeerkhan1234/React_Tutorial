@@ -1,3 +1,4 @@
+import { memo } from "react";
 import React from "react";
 function ChildC({learning,count}){
     console.log("child component")
@@ -6,4 +7,4 @@ function ChildC({learning,count}){
         </>
     )
 }
-export default ChildC;
+export default memo(ChildC);
